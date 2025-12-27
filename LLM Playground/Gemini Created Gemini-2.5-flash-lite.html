@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LLM Fine-Tuning Playground (Inference Edition)</title>
+<style>
+:root {
+--bg-color: #f4f7f6;
+--card-bg: #ffffff;
+--primary: #4a90e2;
+--primary-dark: #357abd;
+--text-main: #333;
+--text-muted: #666;
+--error: #e74c3c;
+--success: #27ae60;
+--warning: #f39c12;
+--border: #ddd;
+}
+
+```
+    * { box-sizing: border-box; }
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-main);
+        line-height: 1.6;
+        margin: 0;
+        padding: 20px;
+    }
+
+    .container { max-width: 1000px; margin: 0 auto; }
+    header { text-align: center; margin-bottom: 30px; }
+    h1 { margin-bottom: 10px; color: var(--primary-dark); }
+    .intro { color: var(--text-muted); max-width: 700px; margin: 0 auto; }
+
+    section {
+        background: var(--card-bg);
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        margin-bottom: 25px;
+        border: 1px solid var(--border);
+    }
+
+    h2 { margin-top: 0; font-size: 1.4rem; display: flex; align-items: center; gap: 10px; }
+    
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media (max-width: 768px) { .grid { grid-template-columns: 1fr; } }
+
+    /* API Key Section */
+    .input-group { display: flex; gap: 10px; margin-top: 10px; }
+    input[type="password"], input[type="text"], select, textarea {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        font-size: 1rem;
+    }
+    button {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: background 0.2s, opacity 0.2s;
+        white-space: nowrap;
+    }
+    .btn-primary { background-color: var(--primary); color: white; }
+    .btn-primary:hover { background-color: var(--primary-dark); }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    #api-status { margin-top: 10px; font-weight: 500; font-size: 0.9rem; }
+    .error-text { color: var(--error); }
+    .success-text { color: var(--success); }
+    .warning-box { background: #fff3cd; color: #856404; padding: 10px; border-radius: 6px; font-size: 0.85rem; margin-top: 10px; }
+
+    /* Presets */
+    .preset-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; }
+    .preset-card {
+        border: 2px solid var(--border);
+        padding: 12px;
+        border-radius: 8px;
+        cursor: pointer;
+        text-align: center;
+        transition: all 0.2s;
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+    .preset-card:hover { border-color: var(--primary); background: #f0f7ff; }
+    .preset-card.active { border-color: var(--primary); background: #eef6ff; color: var(--primary-dark); }
+
+    /* Controls */
+    .control-item { margin-bottom: 20px; }
+    .control-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+    .control-header label { font-weight: 600; font-size: 0.9rem; }
+    .val-badge { background: #eee; padding: 2px 8px; border-radius: 4px; font-family: monospace; }
+    .control-help { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
+    input[type="range"] { width: 100%; cursor: pointer; }
+
+    /* Prompt */
+    textarea { resize: vertical; min-height: 80px; font-family: inherit; }
+    .label-desc { display: block; font-weight: 600; margin-bottom: 5px; margin-top: 15px; }
+    
+    /* Output */
+    #output-area {
+        min-height: 150px;
+        background: #2c3e50;
+        color: #ecf0f1;
+        padding: 20px;
+        border-radius: 8px;
+        white-space: pre-wrap;
+        font-family: 'Courier New', Courier, monospace;
+        overflow-y: auto;
+        max-height: 500px;
+    }
+    .output-meta {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.8rem;
+        margin-top: 10px;
+        color: var(--text-muted);
+    }
+
+    /* Footer */
+    footer { margin-top: 50px; border-top: 1px solid var(--border); padding-top: 30px; }
+    .edu-section h3 { color: var(--primary-dark); }
+    .edu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+    @media (max-width: 768px) { .edu-grid { grid-template-columns: 1fr; } }
+    
+    .loader {
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid var(--primary);
+        border-radius: 50%;
+        width: 18px;
+        height: 18px;
+        animation: spin 1s linear infinite;
+        display: inline-block;
+        vertical-align: middle;
+        margin-right: 10px;
+    }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    .hidden { display: none; }
+</style>
+
+```
+
+</head>
+<body>
+
+```
+<div class="container">
+    <header>
+        <h1>LLM Fine-Tuning Playground</h1>
+        <p class="intro">
+            Understand how models are "steered" using inference controls. This simulates behavioral fine-tuning without retraining the model's brain.
+        </p>
+    </header>
+
+    <section id="api-setup">
+        <h2>🔐 API Key Setup</h2>
+        <p class="intro" style="font-size: 0.9rem; margin-bottom: 10px;">
+            Enter your Google Gemini API Key. Your key is only used to make browser-side requests and is never stored.
+        </p>
+        <div class="input-group">
+            <input type="password" id="api-key" placeholder="Paste your Gemini API Key here...">
+            <button id="validate-btn" class="btn-primary" onclick="validateKey()">Validate API Key</button>
+        </div>
+        <div id="api-status"></div>
+        <div id="api-warning" class="hidden"></div>
+    </section>
+
+    <div class="grid">
+        <div class="controls-col">
+            <section>
+                <h2>🧠 Model Selection</h2>
+                <select id="model-select" disabled>
+                    <option value="">Validate key to load models...</option>
+                </select>
+                <p class="control-help">After validation, we fetch available models. "Gemini 1.5 Flash" is usually fastest for testing.</p>
+            </section>
+
+            <section>
+                <h2>🎭 Response Style</h2>
+                <div class="preset-grid" id="preset-container">
+                    </div>
+            </section>
+
+            <section>
+                <h2>🎛️ Model Controls (Inference)</h2>
+                
+                <div class="control-item">
+                    <div class="control-header">
+                        <label for="temp">Temperature</label>
+                        <span class="val-badge" id="temp-val">0.7</span>
+                    </div>
+                    <input type="range" id="temp" min="0" max="1.5" step="0.1" value="0.7">
+                    <div class="control-help">Controls randomness. Higher = more "creative", Lower = more "factual".</div>
+                </div>
+
+                <div class="control-item">
+                    <div class="control-header">
+                        <label for="top-p">Top-P</label>
+                        <span class="val-badge" id="top-p-val">0.9</span>
+                    </div>
+                    <input type="range" id="top-p" min="0" max="1.0" step="0.05" value="0.9">
+                    <div class="control-help">Picks the smallest set of words whose probabilities add up to P.</div>
+                </div>
+
+                <div class="control-item">
+                    <div class="control-header">
+                        <label for="top-k">Top-K</label>
+                        <span class="val-badge" id="top-k-val">40</span>
+                    </div>
+                    <input type="range" id="top-k" min="1" max="100" step="1" value="40">
+                    <div class="control-help">Limits the choice to the K most likely next words.</div>
+                </div>
+
+                <div class="control-item">
+                    <div class="control-header">
+                        <label for="max-tokens">Max Output Tokens</label>
+                        <span class="val-badge" id="max-tokens-val">512</span>
+                    </div>
+                    <input type="range" id="max-tokens" min="50" max="2048" step="50" value="512">
+                    <div class="control-help">Hard limit on response length. (Safety brake).</div>
+                </div>
+            </section>
+        </div>
+
+        <div class="prompt-col">
+            <section>
+                <h2>🧠 Instruction & Prompt</h2>
+                
+                <label class="label-desc" for="system-instruction">System Instruction (Persona)</label>
+                <textarea id="system-instruction" placeholder="Example: You are a helpful assistant."></textarea>
+                <p class="control-help">This "steers" the model's personality and rules.</p>
+
+                <label class="label-desc" for="user-prompt">User Prompt (The Question)</label>
+                <textarea id="user-prompt" placeholder="Ask something... (e.g., 'How do I bake a cake?')">How do I make a great cup of coffee?</textarea>
+
+                <button id="run-btn" class="btn-primary" style="width: 100%; margin-top: 20px;" onclick="runInference()" disabled>
+                    Run Prompt
+                </button>
+            </section>
+
+            <section>
+                <h2>📤 Model Output</h2>
+                <div id="output-area">Response will appear here...</div>
+                <div class="output-meta">
+                    <span id="meta-model">Model: -</span>
+                    <span id="meta-latency">Latency: -</span>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <footer>
+        <div class="edu-section">
+            <h3>📘 Understanding Fine-Tuning</h3>
+            <div class="edu-grid">
+                <div>
+                    <h4>What are these sliders doing?</h4>
+                    <p>Imagine the LLM as a <strong>Storyteller</strong>.
+                        <ul>
+                            <li><strong>Temperature:</strong> How adventurous is the storyteller? High temp means they take risks. Low temp means they stick to the script.</li>
+                            <li><strong>Top-P & Top-K:</strong> These filter the storyteller's vocabulary. They ensure the teller doesn't pick a "random" word that makes no sense.</li>
+                        </ul>
+                    </p>
+                </div>
+                <div>
+                    <h4>Why is this NOT "Real" Fine-Tuning?</h4>
+                    <p>
+                        <strong>Inference Tuning (This Playground):</strong> You are giving a script to a professional actor. The actor's brain hasn't changed, but their behavior has because of your instructions.
+                    </p>
+                    <p>
+                        <strong>Real Fine-Tuning:</strong> You are sending the actor to school for 3 months to learn a specific specialty. You are literally changing the "synapses" (weights) in the model's brain.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="edu-grid" style="margin-top: 20px;">
+                <div>
+                    <h4>Prompt Engineering vs. Tuning</h4>
+                    <p>Prompt Engineering is finding the perfect words to ask a question. Inference Tuning is finding the perfect settings for the model to think.</p>
+                </div>
+                <div>
+                    <h4>⚠️ Security Reminder</h4>
+                    <p>API Keys are like credit cards. Never share them or commit them to public code. Always delete your key from this field before sharing your screen.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>
+
+<script>
+    // --- CONSTANTS & DATA ---
+    const PRESETS = [
+        {
+            id: 'innovative',
+            name: '🚀 Innovative Thinker',
+            temp: 1.2, topP: 0.95, topK: 60,
+            system: 'You are a visionary futurist. When asked questions, provide unconventional, creative, and highly original ideas. Connect unrelated concepts to find new solutions.'
+        },
+        {
+            id: 'factual',
+            name: '⚖️ Factual & Precise',
+            temp: 0.1, topP: 0.1, topK: 10,
+            system: 'You are a literal, fact-based encyclopedia. Provide strictly verified information without any creative flourish. If you are unsure, state that you do not know.'
+        },
+        {
+            id: 'funny',
+            name: '🤡 Funny Kid (8-10)',
+            temp: 0.9, topP: 0.9, topK: 50,
+            system: 'You are a silly 9-year-old child. You use emojis, tell lighthearted jokes, and get easily excited about small things. Use simple language.'
+        },
+        {
+            id: 'pm',
+            name: '👔 Product Manager',
+            temp: 0.6, topP: 0.8, topK: 40,
+            system: 'You are a Senior Product Manager. Structure your answers with clear objectives, user personas, and prioritized bullet points. Focus on scalability and ROI.'
+        },
+        {
+            id: 'minimalist',
+            name: '🚫 No-Nonsense',
+            temp: 0.0, topP: 1.0, topK: 1,
+            system: 'Respond with the shortest answer possible. No greetings. No pleasantries. Just the core fact.'
+        },
+        {
+            id: 'custom',
+            name: '🛠️ Custom',
+            temp: 0.7, topP: 0.9, topK: 40,
+            system: 'You are a helpful assistant.'
+        }
+    ];
+
+    let state = {
+        apiKey: '',
+        models: [],
+        selectedModel: '',
+        isValidated: false,
+        activePreset: 'innovative'
+    };
+
+    // --- INITIALIZATION ---
+    window.onload = () => {
+        initPresets();
+        initSliders();
+        applyPreset('innovative');
+    };
+
+    function initPresets() {
+        const container = document.getElementById('preset-container');
+        PRESETS.forEach(p => {
+            const div = document.createElement('div');
+            div.className = `preset-card ${p.id === 'innovative' ? 'active' : ''}`;
+            div.id = `preset-${p.id}`;
+            div.innerText = p.name;
+            div.onclick = () => applyPreset(p.id);
+            container.appendChild(div);
+        });
+    }
+
+    function initSliders() {
+        const sliders = ['temp', 'top-p', 'top-k', 'max-tokens'];
+        sliders.forEach(id => {
+            const el = document.getElementById(id);
+            el.oninput = (e) => {
+                document.getElementById(`${id}-val`).innerText = e.target.value;
+                // Switch to custom preset if user manually slides
+                setPresetActiveUI('custom');
+            };
+        });
+    }
+
+    function applyPreset(id) {
+        const preset = PRESETS.find(p => p.id === id);
+        if (!preset) return;
+
+        document.getElementById('temp').value = preset.temp;
+        document.getElementById('temp-val').innerText = preset.temp;
+        
+        document.getElementById('top-p').value = preset.topP;
+        document.getElementById('top-p-val').innerText = preset.topP;
+        
+        document.getElementById('top-k').value = preset.topK;
+        document.getElementById('top-k-val').innerText = preset.topK;
+        
+        document.getElementById('system-instruction').value = preset.system;
+
+        setPresetActiveUI(id);
+    }
+
+    function setPresetActiveUI(id) {
+        document.querySelectorAll('.preset-card').forEach(c => c.classList.remove('active'));
+        const activeEl = document.getElementById(`preset-${id}`);
+        if (activeEl) activeEl.classList.add('active');
+    }
+
+    // --- API LOGIC ---
+
+    async function validateKey() {
+        const keyInput = document.getElementById('api-key');
+        const status = document.getElementById('api-status');
+        const btn = document.getElementById('validate-btn');
+        const modelSelect = document.getElementById('model-select');
+        const apiWarning = document.getElementById('api-warning');
+
+        state.apiKey = keyInput.value.trim();
+        if (!state.apiKey) {
+            status.innerHTML = '<span class="error-text">Please enter a key first.</span>';
+            return;
+        }
+
+        status.innerHTML = '<div class="loader"></div> Testing connection...';
+        btn.disabled = true;
+
+        try {
+            // We attempt to list models to verify the key
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${state.apiKey}`);
+            const data = await response.json();
+
+            if (response.ok) {
+                state.models = data.models.filter(m => m.supportedGenerationMethods.includes('generateContent'));
+                state.isValidated = true;
+                status.innerHTML = '<span class="success-text">✅ API Key Valid! Models loaded.</span>';
+                
+                // Populate select
+                modelSelect.innerHTML = '';
+                state.models.forEach(m => {
+                    const opt = document.createElement('option');
+                    // Clean model names for display
+                    opt.value = m.name;
+                    opt.innerText = m.displayName || m.name.split('/').pop();
+                    modelSelect.appendChild(opt);
+                });
+                
+                // Set default model (prefer flash if available)
+                const flash = state.models.find(m => m.name.includes('flash'));
+                modelSelect.value = flash ? flash.name : state.models[0].name;
+
+                modelSelect.disabled = false;
+                document.getElementById('run-btn').disabled = false;
+                apiWarning.innerHTML = `
+                    <div class="warning-box">
+                        <strong>Note:</strong> Validating the key confirms you can reach the API. 
+                        However, specific models might still fail if your account has no quota or if the model 
+                        region is restricted.
+                    </div>`;
+                apiWarning.classList.remove('hidden');
+
+            } else {
+                let msg = data.error?.message || "Invalid Key or Network Error";
+                status.innerHTML = `<span class="error-text">❌ Validation Failed: ${msg}</span>`;
+            }
+        } catch (err) {
+            status.innerHTML = `<span class="error-text">❌ Error: Could not connect to Google API.</span>`;
+        } finally {
+            btn.disabled = false;
+        }
+    }
+
+    async function runInference() {
+        const output = document.getElementById('output-area');
+        const runBtn = document.getElementById('run-btn');
+        const userPrompt = document.getElementById('user-prompt').value.trim();
+        const systemPrompt = document.getElementById('system-instruction').value.trim();
+        const modelSelect = document.getElementById('model-select');
+
+        if (!userPrompt) {
+            alert("Please enter a user prompt!");
+            return;
+        }
+
+        output.innerHTML = '<div class="loader"></div> Processing request...';
+        runBtn.disabled = true;
+        const startTime = Date.now();
+
+        // Prepare Parameters
+        const config = {
+            temperature: parseFloat(document.getElementById('temp').value),
+            topP: parseFloat(document.getElementById('top-p').value),
+            topK: parseInt(document.getElementById('top-k').value),
+            maxOutputTokens: parseInt(document.getElementById('max-tokens').value)
+        };
+
+        const selectedModel = modelSelect.value;
+        
+        try {
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/${selectedModel}:generateContent?key=${state.apiKey}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    system_instruction: { parts: { text: systemPrompt } },
+                    contents: { parts: { text: userPrompt } },
+                    generationConfig: config
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                const text = data.candidates[0].content.parts[0].text;
+                output.innerText = text;
+                document.getElementById('meta-model').innerText = `Model: ${selectedModel.split('/').pop()}`;
+                document.getElementById('meta-latency').innerText = `Latency: ${Date.now() - startTime}ms`;
+            } else {
+                handleApiError(data, response.status, output);
+            }
+        } catch (err) {
+            output.innerHTML = `<span class="error-text">Network Error: Is your internet working? Check browser console.</span>`;
+        } finally {
+            runBtn.disabled = false;
+        }
+    }
+
+    function handleApiError(data, status, outputEl) {
+        let userMsg = "Something went wrong.";
+        const apiMsg = data.error?.message || "";
+
+        if (status === 429) {
+            userMsg = "<strong>Quota Exceeded:</strong> You've sent too many requests too fast, or your free tier limit is reached.";
+        } else if (status === 400) {
+            userMsg = "<strong>Bad Request:</strong> This model might not support the parameters you chose, or the prompt was blocked by safety filters.";
+        } else if (status === 403) {
+            userMsg = "<strong>Permission Denied:</strong> Your key doesn't have access to this specific model.";
+        } else if (status === 404) {
+            userMsg = "<strong>Not Found:</strong> The selected model doesn't exist anymore or is deprecated.";
+        }
+
+        outputEl.innerHTML = `
+            <div class="error-text">${userMsg}</div>
+            <hr style="border:0; border-top:1px solid #555; margin:10px 0;">
+            <div style="font-size:0.8rem; opacity:0.8;">Raw API Error: ${apiMsg}</div>
+            <div style="margin-top:15px; font-size:0.9rem;">
+                <strong>Suggestions:</strong><br>
+                1. Try a different model (e.g. Gemini 1.5 Flash)<br>
+                2. Reduce the Temperature or Max Tokens<br>
+                3. Ensure your API Key is valid in AI Studio
+            </div>
+        `;
+    }
+</script>
+
+```
+
+</body>
+</html>
