@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WealthGuard — Financial Leak & Debt Architect</title>
+    <meta name="description" content="Identify wealth leaks, audit insurance efficiency, accelerate debt payoff, and project generational wealth with WealthGuard's intelligent financial diagnostics.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Ambient Background -->
+    <div class="ambient-bg">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav" id="mainNav">
+        <div class="nav-brand">
+            <div class="nav-logo">
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                    <path d="M16 2L28 8V24L16 30L4 24V8L16 2Z" stroke="url(#navGrad)" stroke-width="2" fill="none"/>
+                    <path d="M16 8L22 11V21L16 24L10 21V11L16 8Z" fill="url(#navGrad)" opacity="0.3"/>
+                    <path d="M16 12L19 13.5V18.5L16 20L13 18.5V13.5L16 12Z" fill="url(#navGrad)"/>
+                    <defs>
+                        <linearGradient id="navGrad" x1="4" y1="2" x2="28" y2="30">
+                            <stop stop-color="#00E5A0"/>
+                            <stop offset="1" stop-color="#00B4D8"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+            </div>
+            <span class="nav-title">WealthGuard</span>
+        </div>
+        <div class="nav-links">
+            <a href="#dashboard" class="nav-link active" data-section="dashboard">
+                <span class="nav-icon">🔍</span> Leak Detector
+            </a>
+            <a href="#insurance" class="nav-link" data-section="insurance">
+                <span class="nav-icon">🛡️</span> Insurance Audit
+            </a>
+            <a href="#accelerator" class="nav-link" data-section="accelerator">
+                <span class="nav-icon">⚡</span> Debt Killer
+            </a>
+            <a href="#projector" class="nav-link" data-section="projector">
+                <span class="nav-icon">📈</span> Wealth Projector
+            </a>
+        </div>
+        <div class="nav-cta">
+            <button class="btn-reset" id="btnResetAll" title="Reset All Data">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Nav Toggle -->
+    <button class="mobile-nav-toggle" id="mobileNavToggle" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+    </button>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <!-- ========== SECTION 1: LEAK DETECTOR DASHBOARD ========== -->
+        <section class="section active" id="dashboard">
+            <div class="section-header">
+                <div class="section-badge">DIAGNOSTIC TOOL</div>
+                <h1 class="section-title">The Leak <span class="gradient-text">Detector</span></h1>
+                <p class="section-subtitle">Find where your money silently drains away. Enter your financial details below and we'll identify every "wealth leak" costing you your future.</p>
+            </div>
+
+            <!-- Buffett Insight -->
+            <div class="buffett-panel" id="buffettPanel1">
+                <div class="buffett-avatar">🧠</div>
+                <div class="buffett-content">
+                    <div class="buffett-label">The Buffett Insight</div>
+                    <p class="buffett-quote">"Rule No. 1: Never lose money. Rule No. 2: Never forget Rule No. 1." — A guaranteed 13% saved on debt is better than a risky 10% in the market.</p>
+                </div>
+            </div>
+
+            <!-- Income & Expenses -->
+            <div class="card-grid">
+                <div class="glass-card card-income">
+                    <div class="card-header">
+                        <div class="card-icon money-in">₹</div>
+                        <h2 class="card-title">Money In</h2>
+                    </div>
+                    <div class="form-group">
+                        <label for="monthlyIncome">Monthly Take-Home Income</label>
+                        <div class="input-wrapper">
+                            <span class="input-prefix">₹</span>
+                            <input type="number" id="monthlyIncome" placeholder="1,00,000" min="0" step="1000">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card card-expense">
+                    <div class="card-header">
+                        <div class="card-icon money-out">₹</div>
+                        <h2 class="card-title">Money Out</h2>
+                    </div>
+                    <div class="form-group">
+                        <label for="livingExpenses">Mandatory Living Expenses</label>
+                        <div class="input-wrapper">
+                            <span class="input-prefix">₹</span>
+                            <input type="number" id="livingExpenses" placeholder="40,000" min="0" step="1000">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="annualBonus">Annual Bonus / Windfall</label>
+                        <div class="input-wrapper">
+                            <span class="input-prefix">₹</span>
+                            <input type="number" id="annualBonus" placeholder="2,00,000" min="0" step="1000">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loans Section -->
+            <div class="glass-card card-loans">
+                <div class="card-header">
+                    <div class="card-icon leak">⚠️</div>
+                    <h2 class="card-title">The Leaks — Your Loans</h2>
+                    <button class="btn-add" id="btnAddLoan">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        Add Loan
+                    </button>
+                </div>
+                <div class="table-wrapper">
+                    <table class="data-table" id="loansTable">
+                        <thead>
+                            <tr>
+                                <th>Loan Name</th>
+                                <th>Principal (₹)</th>
+                                <th>Interest Rate (%)</th>
+                                <th>EMI (₹/mo)</th>
+                                <th>Type</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="loansBody">
+                            <!-- Dynamic rows -->
+                        </tbody>
+                    </table>
+                    <div class="empty-state" id="loansEmpty">
+                        <span class="empty-icon">📋</span>
+                        <p>No loans added yet. Click "Add Loan" to begin your diagnostic.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Investments Section -->
+            <div class="glass-card card-investments">
+                <div class="card-header">
+                    <div class="card-icon invest">📊</div>
+                    <h2 class="card-title">Your Investments & Insurance</h2>
+                    <button class="btn-add" id="btnAddInvestment">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        Add Investment
+                    </button>
+                </div>
+                <div class="table-wrapper">
+                    <table class="data-table" id="investmentsTable">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Monthly Premium (₹)</th>
+                                <th>Current Value (₹)</th>
+                                <th>Expected Return (%)</th>
+                                <th>Lock-in (yrs)</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="investmentsBody">
+                            <!-- Dynamic rows -->
+                        </tbody>
+                    </table>
+                    <div class="empty-state" id="investmentsEmpty">
+                        <span class="empty-icon">💰</span>
+                        <p>No investments added yet. Add your investments to compare against loan costs.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Run Analysis Button -->
+            <div class="action-bar">
+                <button class="btn-primary btn-glow" id="btnRunAnalysis">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                    Run Leak Analysis
+                </button>
+            </div>
+
+            <!-- Analysis Results -->
+            <div class="results-panel hidden" id="leakResults">
+                <div class="results-header">
+                    <h2 class="results-title">🚨 Leak Analysis Report</h2>
+                </div>
+                <div class="leak-summary" id="leakSummary">
+                    <!-- Dynamic content -->
+                </div>
+                <div class="leak-cards" id="leakCards">
+                    <!-- Dynamic leak cards -->
+                </div>
+                <div class="surplus-display" id="surplusDisplay">
+                    <!-- Dynamic surplus info -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== SECTION 2: INSURANCE AUDITOR ========== -->
+        <section class="section" id="insurance">
+            <div class="section-header">
+                <div class="section-badge">EFFICIENCY AUDIT</div>
+                <h1 class="section-title">Insurance <span class="gradient-text">Auditor</span></h1>
+                <p class="section-subtitle">Are you overpaying for life insurance? Most traditional policies charge 5-10x more than pure Term Insurance for the same coverage.</p>
+            </div>
+
+            <div class="buffett-panel">
+                <div class="buffett-avatar">🧠</div>
+                <div class="buffett-content">
+                    <div class="buffett-label">The Buffett Insight</div>
+                    <p class="buffett-quote">"Price is what you pay. Value is what you get." — If you're paying ₹50,000/year for ₹10 Lakh coverage, you're paying for the seller's profit, not your family's protection.</p>
+                </div>
+            </div>
+
+            <div class="card-grid">
+                <div class="glass-card">
+                    <div class="card-header">
+                        <div class="card-icon">🛡️</div>
+                        <h2 class="card-title">Your Current Policy</h2>
+                    </div>
+                    <div class="form-group">
+                        <label for="insuranceCoverage">Life Insurance Coverage Amount</label>
+                        <div class="input-wrapper">
+                            <span class="input-prefix">₹</span>
+                            <input type="number" id="insuranceCoverage" placeholder="50,00,000" min="0" step="100000">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="insurancePremium">Annual Premium</label>
+                        <div class="input-wrapper">
+                            <span class="input-prefix">₹</span>
+                            <input type="number" id="insurancePremium" placeholder="45,000" min="0" step="1000">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="insuranceType">Policy Type</label>
+                        <select id="insuranceType">
+                            <option value="ulip">ULIP</option>
+                            <option value="endowment">Endowment Plan</option>
+                            <option value="moneyback">Money Back Plan</option>
+                            <option value="term">Term Insurance</option>
+                            <option value="wholelife">Whole Life Plan</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="insurerAge">Your Age</label>
+                        <div class="input-wrapper">
+                            <input type="number" id="insurerAge" placeholder="30" min="18" max="65" step="1">
+                            <span class="input-suffix">years</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card card-benchmark">
+                    <div class="card-header">
+                        <div class="card-icon">📐</div>
+                        <h2 class="card-title">Market Benchmark</h2>
+                    </div>
+                    <div class="benchmark-info">
+                        <div class="benchmark-item">
+                            <span class="benchmark-label">Pure Term Insurance Cost</span>
+                            <span class="benchmark-value">₹900 – ₹1,200/month</span>
+                        </div>
+                        <div class="benchmark-item">
+                            <span class="benchmark-label">Coverage</span>
+                            <span class="benchmark-value">₹1 Crore</span>
+                        </div>
+                        <div class="benchmark-item">
+                            <span class="benchmark-label">For</span>
+                            <span class="benchmark-value">Healthy 30-yr-old Male</span>
+                        </div>
+                        <div class="benchmark-divider"></div>
+                        <div class="benchmark-item highlight">
+                            <span class="benchmark-label">Cost per ₹1 Crore (Annual)</span>
+                            <span class="benchmark-value">₹10,800 – ₹14,400</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-bar">
+                <button class="btn-primary btn-glow" id="btnAuditInsurance">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+                    Audit My Insurance
+                </button>
+            </div>
+
+            <!-- Insurance Audit Results -->
+            <div class="results-panel hidden" id="insuranceResults">
+                <div class="results-header">
+                    <h2 class="results-title">🛡️ Insurance Efficiency Report</h2>
+                </div>
+                <div id="insuranceReport">
+                    <!-- Dynamic content -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== SECTION 3: DEBT KILLER ACCELERATOR ========== -->
+        <section class="section" id="accelerator">
+            <div class="section-header">
+                <div class="section-badge">ACCELERATION ENGINE</div>
+                <h1 class="section-title">Debt-Killer <span class="gradient-text">Accelerator</span></h1>
+                <p class="section-subtitle">See the exact timeline to become debt-free. Redirect freed-up cash from inefficient investments and surplus income to crush your highest-interest debt first.</p>
+            </div>
+
+            <div class="buffett-panel">
+                <div class="buffett-avatar">🧠</div>
+                <div class="buffett-content">
+                    <div class="buffett-label">The Buffett Insight</div>
+                    <p class="buffett-quote">"The most important thing to do if you find yourself in a hole is to stop digging." — Every ₹1 extra on your highest-rate loan saves you ₹3-5 over its lifetime.</p>
+                </div>
+            </div>
+
+            <div class="glass-card">
+                <div class="card-header">
+                    <div class="card-icon">⚡</div>
+                    <h2 class="card-title">Acceleration Parameters</h2>
+                </div>
+                <div class="accel-summary" id="accelSummary">
+                    <div class="summary-grid">
+                        <div class="summary-item">
+                            <span class="summary-label">Monthly Surplus</span>
+                            <span class="summary-value" id="accelSurplus">₹0</span>
+                            <span class="summary-sub">Income − Expenses − EMIs</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Freed Insurance Premium</span>
+                            <span class="summary-value" id="accelFreedPremium">₹0</span>
+                            <span class="summary-sub">From inefficient policies</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Annual Bonus</span>
+                            <span class="summary-value" id="accelBonus">₹0</span>
+                            <span class="summary-sub">Yearly windfall</span>
+                        </div>
+                        <div class="summary-item highlight-card">
+                            <span class="summary-label">Total Acceleration Power</span>
+                            <span class="summary-value accent" id="accelTotal">₹0/mo</span>
+                            <span class="summary-sub">+ Annual Bonus applied yearly</span>
+                        </div>
+                    </div>
+                </div>
+                <p class="helper-text">These values are auto-calculated from your Leak Detector and Insurance Auditor inputs. Complete those sections first for accurate results.</p>
+            </div>
+
+            <div class="action-bar">
+                <button class="btn-primary btn-glow" id="btnAccelerate">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                    Simulate Debt Payoff
+                </button>
+            </div>
+
+            <div class="results-panel hidden" id="acceleratorResults">
+                <div class="results-header">
+                    <h2 class="results-title">⚡ Debt Payoff Simulation</h2>
+                </div>
+                <div class="timeline-comparison" id="timelineComparison">
+                    <!-- Dynamic content -->
+                </div>
+                <div class="chart-container">
+                    <canvas id="debtChart" width="800" height="400"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== SECTION 4: GENERATIONAL WEALTH PROJECTOR ========== -->
+        <section class="section" id="projector">
+            <div class="section-header">
+                <div class="section-badge">WEALTH ENGINE</div>
+                <h1 class="section-title">Generational Wealth <span class="gradient-text">Projector</span></h1>
+                <p class="section-subtitle">Witness the "Inflection Point" — the moment you stop paying interest to others and start earning compounding interest for yourself and your family.</p>
+            </div>
+
+            <div class="buffett-panel">
+                <div class="buffett-avatar">🧠</div>
+                <div class="buffett-content">
+                    <div class="buffett-label">The Buffett Insight</div>
+                    <p class="buffett-quote">"Someone's sitting in the shade today because someone planted a tree a long time ago." — Your former EMI, invested at 11% compounded, becomes your family's wealth tree.</p>
+                </div>
+            </div>
+
+            <div class="card-grid">
+                <div class="glass-card">
+                    <div class="card-header">
+                        <div class="card-icon">📈</div>
+                        <h2 class="card-title">Projection Parameters</h2>
+                    </div>
+                    <div class="form-group">
+                        <label for="projReturnRate">Expected Annual Return (Index Fund)</label>
+                        <div class="input-wrapper">
+                            <input type="number" id="projReturnRate" value="11" min="1" max="30" step="0.5">
+                            <span class="input-suffix">% CAGR</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="projYears">Projection Horizon After Debt-Free</label>
+                        <div class="input-wrapper">
+                            <input type="number" id="projYears" value="20" min="1" max="50" step="1">
+                            <span class="input-suffix">years</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="projInflation">Inflation Rate</label>
+                        <div class="input-wrapper">
+                            <input type="number" id="projInflation" value="6" min="0" max="15" step="0.5">
+                            <span class="input-suffix">%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card card-inflection">
+                    <div class="card-header">
+                        <div class="card-icon">🎯</div>
+                        <h2 class="card-title">The Inflection Point</h2>
+                    </div>
+                    <div class="inflection-info" id="inflectionInfo">
+                        <p class="inflection-placeholder">Complete the Debt-Killer simulation first to see your Inflection Point — the date when money starts working <em>for</em> you instead of <em>against</em> you.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-bar">
+                <button class="btn-primary btn-glow" id="btnProject">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                    Project Generational Wealth
+                </button>
+            </div>
+
+            <div class="results-panel hidden" id="projectorResults">
+                <div class="results-header">
+                    <h2 class="results-title">📈 Wealth Projection</h2>
+                </div>
+                <div class="wealth-milestones" id="wealthMilestones">
+                    <!-- Dynamic content -->
+                </div>
+                <div class="chart-container">
+                    <canvas id="wealthChart" width="800" height="450"></canvas>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2026 WealthGuard. Built with discipline, not derivatives.</p>
+            <p class="footer-disclaimer">This is a financial planning tool for educational purposes. Consult a registered financial advisor before making investment decisions.</p>
+        </div>
+    </footer>
+
+    <script src="app.js" defer></script>
+</body>
+</html>
